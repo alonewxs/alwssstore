@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cleitondoraio | Bots para Discord</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --purple: #8b5cf6;
+  --purple-light: #a78bfa;
+  --pink: #ec4899;
+  --bg: #050508;
+  --bg2: #0c0c14;
+  --surface: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.07);
+  --text: #e8e8f0;
+  --muted: #8888a8;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── CURSOR GLOW ── */
+.cursor-glow {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  transition: opacity 0.3s;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.container { width: 90%; max-width: 1200px; margin: auto; position: relative; z-index: 2; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; width: 100%;
+  z-index: 1000;
+  padding: 0;
+}
+nav::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(5,5,8,0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+nav .container {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 0; position: relative;
+}
+.logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.logo img {
+  width: 38px; height: 38px; border-radius: 10px; object-fit: cover;
+  border: 1px solid rgba(139,92,246,0.5);
+}
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 18px; color: white; letter-spacing: -0.3px;
+}
+.logo-text span { color: var(--purple-light); }
+.nav-cta {
+  padding: 10px 22px; background: linear-gradient(135deg, var(--purple), var(--pink));
+  border-radius: 8px; color: white; text-decoration: none;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  position: relative;
+  padding: 120px 0 80px;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 40%, rgba(139,92,246,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 80% 20%, rgba(236,72,153,0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 20% 80%, rgba(91,140,255,0.08) 0%, transparent 60%);
+}
+
+/* grid lines */
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(139,92,246,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139,92,246,0.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+}
+
+.hero-content { text-align: center; position: relative; z-index: 2; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 18px;
+  background: rgba(139,92,246,0.1);
+  border: 1px solid rgba(139,92,246,0.3);
+  border-radius: 100px;
+  font-size: 13px; color: var(--purple-light); font-weight: 500;
+  margin-bottom: 32px;
+  animation: fadeUp 0.6s ease both;
+}
+.badge-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.3); }
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(52px, 7vw, 96px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.hero h1 .line2 {
+  display: block;
+  background: linear-gradient(90deg, #8b5cf6, #ec4899, #a78bfa);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeUp 0.6s 0.2s ease both, shimmer 4s linear infinite;
+}
+@keyframes shimmer { to { background-position: 200% center; } }
+
+.hero-sub {
+  margin-top: 24px;
+  font-size: clamp(16px, 1.8vw, 20px);
+  color: var(--muted);
+  font-weight: 300;
+  max-width: 500px; margin-left: auto; margin-right: auto;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+
+.hero-buttons {
+  margin-top: 44px;
+  display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+  animation: fadeUp 0.6s 0.4s ease both;
+}
+.btn {
+  padding: 14px 30px; border-radius: 10px; font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 15px; text-decoration: none; transition: all 0.25s;
+  display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer;
+}
+.btn-primary {
+  background: linear-gradient(135deg, #6d5acd, #ec4899);
+  color: white;
+  box-shadow: 0 0 30px rgba(139,92,246,0.35);
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(139,92,246,0.5); }
+.btn-ghost {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-ghost:hover { background: var(--surface); border-color: rgba(139,92,246,0.4); transform: translateY(-2px); }
+
+.hero-stats {
+  display: flex; justify-content: center; gap: 0; margin-top: 72px;
+  animation: fadeUp 0.6s 0.5s ease both;
+}
+.stat-item {
+  padding: 0 48px;
+  text-align: center;
+}
+.stat-item:not(:last-child) {
+  border-right: 1px solid var(--border);
+}
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 42px; font-weight: 800;
+  background: linear-gradient(135deg, var(--purple-light), var(--pink));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  display: block;
+}
+.stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION COMMON ── */
+section { padding: 120px 0; position: relative; z-index: 2; }
+
+.section-label {
+  display: inline-block;
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--purple-light); font-weight: 600;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800; line-height: 1.1;
+  letter-spacing: -1px;
+}
+.section-title span {
+  background: linear-gradient(90deg, #8b5cf6, #ec4899);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.section-header { text-align: center; margin-bottom: 72px; }
+
+/* ── DEMO ── */
+.demo-section { background: var(--bg2); }
+.demo-wrapper { display: flex; justify-content: center; }
+.discord-window {
+  width: 680px; max-width: 100%;
+  background: #1e1f22;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.1);
+}
+.discord-titlebar {
+  background: #1a1b1e;
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.titlebar-dot { width: 12px; height: 12px; border-radius: 50%; }
+.titlebar-dot.red { background: #ff5f57; }
+.titlebar-dot.yellow { background: #febc2e; }
+.titlebar-dot.green { background: #28c840; }
+.titlebar-name { margin-left: 12px; font-size: 13px; color: #6b6b80; font-weight: 500; }
+.discord-body { padding: 32px; }
+.dc-msg { display: flex; gap: 14px; margin-bottom: 28px; animation: fadeUp 0.5s ease both; }
+.dc-msg:nth-child(2) { animation-delay: 0.3s; }
+.dc-msg:nth-child(3) { animation-delay: 0.6s; }
+.dc-msg:nth-child(4) { animation-delay: 0.9s; }
+.dc-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.dc-avatar.bot { background: linear-gradient(135deg, #7c3aed, #ec4899); }
+.dc-content { flex: 1; }
+.dc-username { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.dc-username.bot-tag { color: #a78bfa; }
+.dc-username .tag {
+  display: inline-block; margin-left: 6px;
+  background: #5865f2; color: white; font-size: 10px;
+  padding: 1px 5px; border-radius: 3px; font-weight: 600;
+}
+.dc-text { font-size: 15px; color: #dbdce7; }
+.dc-embed {
+  margin-top: 10px;
+  background: #2b2d31;
+  border-left: 4px solid #8b5cf6;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+}
+.dc-embed-title { font-weight: 700; font-size: 14px; margin-bottom: 10px; color: white; }
+.dc-embed-row { display: flex; justify-content: space-between; gap: 16px; }
+.dc-embed-field { flex: 1; }
+.dc-embed-field-name { font-size: 11px; font-weight: 700; color: #a3a3c2; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.dc-embed-field-value { font-size: 14px; color: #dbdce7; }
+.rank-list { list-style: none; }
+.rank-list li { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; color: #dbdce7; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.rank-list li:last-child { border: none; }
+.rank-pos { color: var(--purple-light); font-weight: 700; }
+
+/* ── FEATURES GRID ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.feature-card {
+  background: var(--bg);
+  padding: 40px;
+  transition: background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(139,92,246,0.08), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-card:hover { background: rgba(139,92,246,0.05); }
+.feature-icon {
+  width: 52px; height: 52px;
+  background: rgba(139,92,246,0.12);
+  border: 1px solid rgba(139,92,246,0.25);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px; font-size: 22px;
+  transition: transform 0.3s;
+}
+.feature-card:hover .feature-icon { transform: scale(1.1) rotate(-3deg); }
+.feature-card h3 {
+  font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700;
+  margin-bottom: 10px;
+}
+.feature-card p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+/* ── STEPS ── */
+.steps-section { background: var(--bg2); }
+.steps-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.step-card {
+  padding: 50px 36px;
+  position: relative;
+  text-align: center;
+}
+.step-card::after {
+  content: '';
+  position: absolute; right: 0; top: 50%;
+  width: 2px; height: 60px; margin-top: -30px;
+  background: linear-gradient(to bottom, transparent, var(--purple), transparent);
+}
+.step-card:last-child::after { display: none; }
+.step-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 64px; font-weight: 800;
+  background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(236,72,153,0.15));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+.step-card h3 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+.step-card p { color: var(--muted); line-height: 1.7; font-size: 14px; max-width: 220px; margin: auto; }
+
+/* ── REVIEWS ── */
+.reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.review-card {
+  padding: 36px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.review-card::before {
+  content: '"';
+  position: absolute; top: 20px; right: 24px;
+  font-size: 80px; line-height: 1; color: rgba(139,92,246,0.1);
+  font-family: Georgia, serif;
+}
+.review-card:hover { border-color: rgba(139,92,246,0.4); transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+.stars { display: flex; gap: 4px; margin-bottom: 20px; }
+.star { font-size: 14px; }
+.review-text { font-size: 16px; line-height: 1.7; color: var(--text); margin-bottom: 28px; }
+.reviewer { display: flex; align-items: center; gap: 14px; }
+.reviewer-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 2px solid rgba(139,92,246,0.3);
+  object-fit: cover;
+}
+.reviewer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
+.reviewer-server { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+/* ── CTA ── */
+.cta-section {
+  text-align: center;
+  background: var(--bg2);
+}
+.cta-inner {
+  max-width: 680px; margin: auto;
+  position: relative;
+}
+.cta-glow {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse, rgba(139,92,246,0.2) 0%, transparent 70%);
+  filter: blur(40px); pointer-events: none;
+}
+.cta-inner h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 800; line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+}
+.cta-inner p { color: var(--muted); font-size: 17px; line-height: 1.6; }
+.cta-btns { display: flex; justify-content: center; gap: 16px; margin-top: 48px; flex-wrap: wrap; }
+
+/* ── LEGAL ── */
+.legal-wrap { max-width: 820px; margin: auto; display: grid; gap: 80px; }
+.legal-block {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 52px;
+}
+.legal-block h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px; font-weight: 800;
+  margin-bottom: 8px;
+}
+.legal-date { font-size: 13px; color: var(--muted); margin-bottom: 36px; }
+.legal-block h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--purple-light);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-top: 28px; margin-bottom: 10px;
+}
+.legal-block p, .legal-block li { color: var(--muted); font-size: 14px; line-height: 1.8; }
+.legal-block ul { margin-left: 20px; }
+.legal-block li { margin-bottom: 4px; }
+.legal-link { color: var(--purple-light); text-decoration: none; }
+.legal-link:hover { text-decoration: underline; }
+
+/* ── FOOTER ── */
+footer {
+  padding: 60px 0 40px;
+  border-top: 1px solid var(--border);
+  text-align: center; position: relative; z-index: 2;
+}
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px; font-weight: 800;
+  margin-bottom: 16px;
+}
+.footer-logo span { color: var(--purple-light); }
+.footer-links { margin-bottom: 24px; }
+.footer-links a {
+  color: var(--muted); text-decoration: none;
+  font-size: 14px; margin: 0 14px; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--purple-light); }
+.footer-copy { font-size: 13px; color: #55556a; }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 900px) {
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .steps-row { grid-template-columns: 1fr; }
+  .step-card::after { display: none; }
+  .reviews-grid { grid-template-columns: 1fr; }
+  .hero-stats { gap: 0; }
+  .stat-item { padding: 0 24px; }
+}
+@media(max-width: 600px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .hero-stats { flex-direction: column; gap: 24px; }
+  .stat-item { border: none !important; }
+  .legal-block { padding: 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR GLOW -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <a class="logo" href="#">
+      <img src="logo.png" alt="Logo">
+      <span class="logo-text">cleitondoraio<span>.</span></span>
+    </a>
+    <a href="https://discord.gg/UUc65Acjqh" class="nav-cta">Solicitar Bot →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Disponível para novos projetos
+      </div>
+      <h1>
+        Bots para Discord
+        <span class="line2">Sob Medida</span>
+      </h1>
+      <p class="hero-sub">Automatize seu servidor com sistemas exclusivos, profissionais e entregues rápido.</p>
+      <div class="hero-buttons">
+        <a href="https://discord.gg/UUc65Acjqh" class="btn btn-primary">
+          💬 Solicitar Orçamento
+        </a>
+        <a href="#funcionalidades" class="btn btn-ghost">Ver Funcionalidades</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-num" data-target="100">0</span>
+          <span class="stat-label">Bots Criados</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num" data-target="50">0</span>
+          <span class="stat-label">Clientes Felizes</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">24/7</span>
+          <span class="stat-label">Suporte</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Demonstração</div>
+      <h2 class="section-title">Veja o Bot em <span>Ação</span></h2>
+    </div>
+    <div class="demo-wrapper reveal">
+      <div class="discord-window">
+        <div class="discord-titlebar">
+          <span class="titlebar-dot red"></span>
+          <span class="titlebar-dot yellow"></span>
+          <span class="titlebar-dot green"></span>
+          <span class="titlebar-name"># geral — Seu Servidor</span>
+        </div>
+        <div class="discord-body">
+          <div class="dc-msg">
+            <div class="dc-avatar">👤</div>
+            <div class="dc-content">
+              <div class="dc-username">Usuario</div>
+              <div class="dc-text">/rank</div>
+            </div>
+          </div>
+          <div class="dc-msg">
+            <div class="dc-avatar bot">🤖</div>
+            <div class="dc-content">
+              <div class="dc-username bot-tag">BOT DEMO <span class="tag">BOT</span></div>
+              <div class="dc-embed">
+                <div class="dc-embed-title">🏆 Ranking do Servidor</div>
+                <ul class="rank-list">
+                  <li><span><span class="rank-pos">🥇 #1</span> &nbsp;Gabriel</span><span>1.250 XP</span></li>
+                  <li><span><span class="rank-pos">🥈 #2</span> &nbsp;Maria</span><span>980 XP</span></li>
+                  <li><span><span class="rank-pos">🥉 #3</span> &nbsp;Lucas</span><span>870 XP</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="dc-msg">
+            <div class="dc-avatar">👤</div>
+            <div class="dc-content">
+              <div class="dc-username">Usuario</div>
+              <div class="dc-text">/ticket abrir Preciso de suporte</div>
+            </div>
+          </div>
+          <div class="dc-msg">
+            <div class="dc-avatar bot">🤖</div>
+            <div class="dc-content">
+              <div class="dc-username bot-tag">BOT DEMO <span class="tag">BOT</span></div>
+              <div class="dc-embed">
+                <div class="dc-embed-title">🎫 Ticket #0042 — Criado</div>
+                <div class="dc-embed-row">
+                  <div class="dc-embed-field">
+                    <div class="dc-embed-field-name">Status</div>
+                    <div class="dc-embed-field-value">🟢 Aberto</div>
+                  </div>
+                  <div class="dc-embed-field">
+                    <div class="dc-embed-field-name">Prioridade</div>
+                    <div class="dc-embed-field-value">🔶 Normal</div>
+                  </div>
+                  <div class="dc-embed-field">
+                    <div class="dc-embed-field-name">ETA</div>
+                    <div class="dc-embed-field-value">~15 min</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="funcionalidades">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Funcionalidades</div>
+      <h2 class="section-title">O que seu Bot <span>pode fazer</span></h2>
+    </div>
+    <div class="features-grid reveal">
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h3>Sistemas Personalizados</h3>
+        <p>Comandos exclusivos feitos sob medida para o seu servidor e comunidade.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3>Sistema de Ranking</h3>
+        <p>XP, níveis, cargos automáticos e leaderboard atualizado em tempo real.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>Logs Automáticos</h3>
+        <p>Monitoramento completo: entradas, saídas, edições, punições e muito mais.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎫</div>
+        <h3>Sistema de Tickets</h3>
+        <p>Atendimento organizado com painel, histórico e fechamento automático.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Moderação Inteligente</h3>
+        <p>Automod, anti-spam, anti-raid, filtros de palavras e punições automáticas.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💳</div>
+        <h3>Sistema de Economia</h3>
+        <p>Moedas, loja, missões diárias, transferências e ranking de riqueza.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="steps-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Processo</div>
+      <h2 class="section-title">Como <span>Funciona</span></h2>
+    </div>
+    <div class="steps-row">
+      <div class="step-card reveal">
+        <div class="step-num">01</div>
+        <h3>Explique sua ideia</h3>
+        <p>Me conta o que você quer — funcionalidades, comandos, integrações e objetivos do servidor.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">02</div>
+        <h3>Desenvolvimento</h3>
+        <p>Desenvolvo seu bot do zero com código limpo, otimizado e pronto para escalar.</p>
+      </div>
+      <div class="step-card reveal">
+        <div class="step-num">03</div>
+        <h3>Entrega + Suporte</h3>
+        <p>Você recebe o bot configurado, documentado e com suporte contínuo garantido.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section>
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Avaliações</div>
+      <h2 class="section-title">O que os clientes <span>dizem</span></h2>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card reveal">
+        <div class="stars">
+          <span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span>
+        </div>
+        <p class="review-text">10/10 bot perfeito, entregou exatamente o que eu pedi e ainda antes do prazo.</p>
+        <div class="reviewer">
+          <img class="reviewer-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="fogo33">
+          <div>
+            <div class="reviewer-name">fogo33</div>
+            <div class="reviewer-server">Echo MM</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal">
+        <div class="stars">
+          <span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span>
+        </div>
+        <p class="review-text">10/10 — Comprei 2 vezes. Rápido, atencioso e o bot ficou muito melhor do que eu esperava.</p>
+        <div class="reviewer">
+          <img class="reviewer-avatar" src="https://cdn.discordapp.com/embed/avatars/2.png" alt="Ukuna">
+          <div>
+            <div class="reviewer-name">Ukuna</div>
+            <div class="reviewer-server">Sun Store</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card reveal">
+        <div class="stars">
+          <span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span>
+        </div>
+        <p class="review-text">10/10 tropa — ele é muito bom no que faz, profissional demais. Recomendo muito.</p>
+        <div class="reviewer">
+          <img class="reviewer-avatar" src="https://cdn.discordapp.com/embed/avatars/4.png" alt="Vittinho">
+          <div>
+            <div class="reviewer-name">Vittinho</div>
+            <div class="reviewer-server">Phantom Store</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-inner reveal">
+      <div class="cta-glow"></div>
+      <h2>Pronto para ter seu<br><span style="background:linear-gradient(90deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent">próprio bot?</span></h2>
+      <p>Entre no servidor ou fale diretamente comigo para começar hoje.</p>
+      <div class="cta-btns">
+        <a href="https://discord.gg/UUc65Acjqh" class="btn btn-primary">💬 Entrar no Servidor</a>
+        <a href="https://discord.com/channels/@me" class="btn btn-ghost">✉️ Falar Direto</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEGAL -->
+<section id="termos">
+  <div class="container">
+    <div class="legal-wrap">
+      <div class="legal-block reveal">
+        <h2>📄 Termos de Serviço</h2>
+        <div class="legal-date">Última atualização: 2026</div>
+        <h3>1. Uso do Serviço</h3>
+        <p>Este bot foi criado para fornecer funcionalidades dentro do Discord.</p>
+        <ul>
+          <li>Não usar para atividades ilegais</li>
+          <li>Não abusar ou explorar falhas</li>
+          <li>Seguir os termos do Discord</li>
+        </ul>
+        <h3>2. Disponibilidade</h3>
+        <p>O bot pode ficar indisponível a qualquer momento por motivos de manutenção ou imprevistos.</p>
+        <h3>3. Responsabilidade</h3>
+        <p>O uso é totalmente por sua responsabilidade após a compra.</p>
+        <h3>4. Modificações</h3>
+        <p>Podemos alterar ou encerrar o serviço caso os custos de hospedagem não sejam mantidos.</p>
+        <h3>5. Contato</h3>
+        <p><a href="https://discord.gg/4qGM6eGNX6" class="legal-link" target="_blank">Servidor no Discord →</a></p>
+      </div>
+
+      <div id="privacidade" class="legal-block reveal">
+        <h2>🔒 Política de Privacidade</h2>
+        <div class="legal-date">Última atualização: 2026</div>
+        <h3>1. Dados Coletados</h3>
+        <ul>
+          <li>ID do usuário</li>
+          <li>ID do servidor</li>
+          <li>Uso de comandos</li>
+          <li>Uso de emojis personalizados</li>
+        </ul>
+        <h3>2. Uso dos Dados</h3>
+        <p>Os dados são usados para funcionamento e melhorias para que não haja erros durante a execução do bot.</p>
+        <h3>3. Compartilhamento</h3>
+        <p>Não vendemos seus dados. Eles não são necessários para nenhuma execução do bot (exceto chave pix quando aplicável).</p>
+        <h3>4. Armazenamento</h3>
+        <p>Os dados podem ser armazenados de forma temporária apenas para funcionamento do bot.</p>
+        <h3>5. Segurança</h3>
+        <p>Fazemos o possível para proteger os dados com as melhores práticas disponíveis.</p>
+        <h3>6. Contato</h3>
+        <p><a href="https://discord.gg/4qGM6eGNX6" class="legal-link" target="_blank">Servidor no Discord →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">cleitondoraio<span>.</span></div>
+  <div class="footer-links">
+    <a href="#termos">Termos de Serviço</a>
+    <a href="#privacidade">Política de Privacidade</a>
+    <a href="https://discord.gg/UUc65Acjqh" target="_blank">Discord</a>
+  </div>
+  <div class="footer-copy">© 2026 cleitondoraio — Todos os direitos reservados</div>
+</footer>
+
+<script>
+// Cursor glow
+const glow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', e => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      entry.target.style.transitionDelay = (i % 4 * 0.1) + 's';
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Counter animation
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  if (!target) return;
+  let current = 0;
+  const step = Math.ceil(target / 60);
+  const timer = setInterval(() => {
+    current = Math.min(current + step, target);
+    el.textContent = current + '+';
+    if (current >= target) clearInterval(timer);
+  }, 25);
+}
+const statObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      animateCounter(entry.target);
+      statObserver.unobserve(entry.target);
+    }
+  });
+});
+document.querySelectorAll('[data-target]').forEach(el => statObserver.observe(el));
+</script>
+</body>
+</html>
