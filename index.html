@@ -30,7 +30,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ── ANTI-FRAUD BANNER ── */
 .fraud-banner {
   position: fixed;
   bottom: 20px;
@@ -73,7 +72,7 @@ body {
   .fraud-banner { font-size: 11px; padding: 10px 14px; white-space: normal; text-align: center; width: 90%; }
 }
 
-/* ── CURSOR GLOW ── */
+
 .cursor-glow {
   width: 400px; height: 400px;
   background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
@@ -85,7 +84,6 @@ body {
   transition: opacity 0.3s;
 }
 
-/* ── NOISE OVERLAY ── */
 body::before {
   content: '';
   position: fixed;
@@ -98,7 +96,7 @@ body::before {
 
 .container { width: 90%; max-width: 1200px; margin: auto; position: relative; z-index: 2; }
 
-/* ── NAV ── */
+
 nav {
   position: fixed; top: 0; left: 0; width: 100%;
   z-index: 1000;
@@ -133,7 +131,7 @@ nav .container {
 }
 .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
 
-/* ── HERO ── */
+
 .hero {
   min-height: 100vh;
   display: flex; align-items: center;
@@ -149,7 +147,7 @@ nav .container {
     radial-gradient(ellipse 50% 50% at 20% 80%, rgba(91,140,255,0.08) 0%, transparent 60%);
 }
 
-/* grid lines */
+
 .hero-grid {
   position: absolute; inset: 0;
   background-image:
@@ -257,7 +255,7 @@ nav .container {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ── SECTION COMMON ── */
+
 section { padding: 120px 0; position: relative; z-index: 2; }
 
 .section-label {
@@ -278,7 +276,7 @@ section { padding: 120px 0; position: relative; z-index: 2; }
 }
 .section-header { text-align: center; margin-bottom: 72px; }
 
-/* ── DEMO ── */
+
 .demo-section { background: var(--bg2); }
 .demo-wrapper { display: flex; justify-content: center; }
 .discord-window {
@@ -337,7 +335,7 @@ section { padding: 120px 0; position: relative; z-index: 2; }
 .rank-list li:last-child { border: none; }
 .rank-pos { color: var(--purple-light); font-weight: 700; }
 
-/* ── FEATURES GRID ── */
+
 .features-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -378,7 +376,7 @@ section { padding: 120px 0; position: relative; z-index: 2; }
 }
 .feature-card p { color: var(--muted); font-size: 14px; line-height: 1.7; }
 
-/* ── STEPS ── */
+
 .steps-section { background: var(--bg2); }
 .steps-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
 .step-card {
@@ -404,7 +402,7 @@ section { padding: 120px 0; position: relative; z-index: 2; }
 .step-card h3 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 12px; }
 .step-card p { color: var(--muted); line-height: 1.7; font-size: 14px; max-width: 220px; margin: auto; }
 
-/* ── REVIEWS ── */
+
 .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 .review-card {
   padding: 36px;
@@ -433,7 +431,7 @@ section { padding: 120px 0; position: relative; z-index: 2; }
 .reviewer-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
 .reviewer-server { font-size: 13px; color: var(--muted); margin-top: 2px; }
 
-/* ── CTA ── */
+
 .cta-section {
   text-align: center;
   background: var(--bg2);
@@ -459,7 +457,7 @@ section { padding: 120px 0; position: relative; z-index: 2; }
 .cta-inner p { color: var(--muted); font-size: 17px; line-height: 1.6; }
 .cta-btns { display: flex; justify-content: center; gap: 16px; margin-top: 48px; flex-wrap: wrap; }
 
-/* ── LEGAL ── */
+
 .legal-wrap { max-width: 820px; margin: auto; display: grid; gap: 80px; }
 .legal-block {
   background: var(--bg2);
@@ -486,7 +484,7 @@ section { padding: 120px 0; position: relative; z-index: 2; }
 .legal-link { color: var(--purple-light); text-decoration: none; }
 .legal-link:hover { text-decoration: underline; }
 
-/* ── FOOTER ── */
+
 footer {
   padding: 60px 0 40px;
   border-top: 1px solid var(--border);
@@ -506,14 +504,13 @@ footer {
 .footer-links a:hover { color: var(--purple-light); }
 .footer-copy { font-size: 13px; color: #55556a; }
 
-/* ── SCROLL REVEAL ── */
 .reveal {
   opacity: 0; transform: translateY(30px);
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
 .reveal.visible { opacity: 1; transform: none; }
 
-/* ── RESPONSIVE ── */
+
 @media(max-width: 900px) {
   .features-grid { grid-template-columns: 1fr 1fr; }
   .steps-row { grid-template-columns: 1fr; }
@@ -532,10 +529,9 @@ footer {
 </head>
 <body>
 
-<!-- CURSOR GLOW -->
 <div class="cursor-glow" id="cursorGlow"></div>
 
-<!-- NAV -->
+
 <nav>
   <div class="container">
     <a class="logo" href="#">
@@ -546,7 +542,7 @@ footer {
   </div>
 </nav>
 
-<!-- HERO -->
+
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
@@ -585,7 +581,7 @@ footer {
   </div>
 </section>
 
-<!-- DEMO -->
+
 <section class="demo-section">
   <div class="container">
     <div class="section-header reveal">
@@ -658,7 +654,7 @@ footer {
   </div>
 </section>
 
-<!-- FEATURES -->
+
 <section id="funcionalidades">
   <div class="container">
     <div class="section-header reveal">
@@ -700,7 +696,7 @@ footer {
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
+
 <section class="steps-section">
   <div class="container">
     <div class="section-header reveal">
@@ -727,7 +723,7 @@ footer {
   </div>
 </section>
 
-<!-- REVIEWS -->
+
 <section>
   <div class="container">
     <div class="section-header reveal">
@@ -778,7 +774,7 @@ footer {
   </div>
 </section>
 
-<!-- CTA -->
+
 <section class="cta-section">
   <div class="container">
     <div class="cta-inner reveal">
@@ -793,7 +789,7 @@ footer {
   </div>
 </section>
 
-<!-- LEGAL -->
+
 <section id="termos">
   <div class="container">
     <div class="legal-wrap">
@@ -842,7 +838,7 @@ footer {
   </div>
 </section>
 
-<!-- FOOTER -->
+
 <footer>
   <div class="footer-logo">cleitondoraio<span>.</span></div>
   <div class="footer-links">
@@ -853,7 +849,6 @@ footer {
   <div class="footer-copy">© 2026 cleitondoraio — Todos os direitos reservados</div>
 </footer>
 
-<!-- ANTI-FRAUD BANNER -->
 <div class="fraud-banner" id="fraudBanner">
   <span class="shield">💻</span>
   <span>Verifique meu Discord antes de pagar: <strong style="background:linear-gradient(90deg,#8b5cf6,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent">@cleitondoraio.</strong> — desconfie de cópias e golpistas.</span>
@@ -861,14 +856,14 @@ footer {
 </div>
 
 <script>
-// Cursor glow
+
 const glow = document.getElementById('cursorGlow');
 document.addEventListener('mousemove', e => {
   glow.style.left = e.clientX + 'px';
   glow.style.top = e.clientY + 'px';
 });
 
-// Scroll reveal
+
 const observer = new IntersectionObserver(entries => {
   entries.forEach((entry, i) => {
     if (entry.isIntersecting) {
@@ -879,7 +874,7 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-// Counter animation
+
 function animateCounter(el) {
   const target = parseInt(el.dataset.target);
   if (!target) return;
