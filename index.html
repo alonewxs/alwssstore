@@ -750,6 +750,64 @@ footer {
   .fraud-banner { font-size:11px; padding:10px 14px; white-space:normal; text-align:center; width:90%; }
   .float-btn { bottom:22px; right:16px; }
 }
+
+
+/* ── CARROSSEL DE AVALIAÇÕES ── */
+.carousel-outer {
+  overflow: hidden; position: relative; width: 100%;
+}
+.carousel-outer::before, .carousel-outer::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 100px; z-index: 2; pointer-events: none;
+}
+.carousel-outer::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+.carousel-outer::after  { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+
+.carousel-track {
+  display: flex; gap: 18px; width: max-content;
+  animation: carousel-ltr 38s linear infinite;
+}
+.carousel-track:hover { animation-play-state: paused; }
+.carousel-rtl { animation: carousel-rtl 42s linear infinite; }
+.carousel-rtl:hover { animation-play-state: paused; }
+
+@keyframes carousel-ltr { from { transform: translateX(0); }    to { transform: translateX(-50%); } }
+@keyframes carousel-rtl { from { transform: translateX(-50%); } to { transform: translateX(0); }    }
+
+.rev-card {
+  flex-shrink: 0; width: 300px;
+  padding: 30px; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 18px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.rev-card::before {
+  content: '"'; position: absolute; top: 12px; right: 18px;
+  font-size: 80px; line-height: 1; color: rgba(139,92,246,0.08);
+  font-family: Georgia, serif; pointer-events: none;
+}
+.rev-card:hover { border-color: var(--border-accent); transform: translateY(-4px); }
+
+/* ── SLIDESHOW ── */
+.rv-stage { max-width: 680px; margin: 0 auto; }
+.rv-progress-wrap { height: 2px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-bottom: 20px; overflow: hidden; }
+.rv-progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--purple), var(--pink)); border-radius: 2px; transition: width linear; }
+.rv-card-wrap { position: relative; height: 220px; }
+.rv-card {
+  position: absolute; inset: 0;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 20px;
+  padding: 32px 36px; display: flex; flex-direction: column; justify-content: space-between;
+  opacity: 0; transform: translateY(18px) scale(0.97);
+  transition: opacity 0.5s ease, transform 0.5s ease; pointer-events: none;
+}
+.rv-card.active { opacity: 1; transform: none; pointer-events: auto; border-color: var(--border-accent); box-shadow: 0 0 40px rgba(139,92,246,0.1); }
+.rv-card.leaving { opacity: 0; transform: translateY(-18px) scale(0.97); }
+.rv-card::before { content: '"'; position: absolute; top: 10px; right: 18px; font-size: 70px; line-height: 1; color: rgba(139,92,246,0.08); font-family: Georgia, serif; pointer-events: none; }
+.rv-card .stars { margin-bottom: 12px; }
+.rv-card .review-text { font-size: 15px; line-height: 1.75; color: var(--text2); flex: 1; }
+.rv-card .reviewer { margin-top: 18px; }
+.rv-dots { display: flex; justify-content: center; gap: 8px; margin-top: 24px; }
+.rv-dot { width: 8px; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.15); border: none; cursor: pointer; padding: 0; transition: all 0.35s; }
+.rv-dot.active { background: linear-gradient(90deg, var(--purple), var(--pink)); width: 28px; }
 </style>
 </head>
 <body>
@@ -1154,9 +1212,9 @@ footer {
     <div class="section-header center reveal">
       <div class="section-label">Avaliações</div>
       <h2 class="section-title">O que os clientes <span>dizem</span></h2>
+      <p class="section-sub">Todos os projetos entregues com 5 estrelas.</p>
     </div>
 
-    <!-- overview -->
     <div class="review-overview reveal">
       <div>
         <div class="review-big-num">5.0</div>
@@ -1164,7 +1222,7 @@ footer {
         <div class="review-big-label">Avaliação média</div>
       </div>
       <div class="review-bars">
-        <div class="rbar"><span>5★</span><div class="rbar-track"><div class="rbar-fill" style="width:100%"></div></div><span>3</span></div>
+        <div class="rbar"><span>5★</span><div class="rbar-track"><div class="rbar-fill" style="width:100%"></div></div><span>8</span></div>
         <div class="rbar"><span>4★</span><div class="rbar-track"><div class="rbar-fill" style="width:0%"></div></div><span>0</span></div>
         <div class="rbar"><span>3★</span><div class="rbar-track"><div class="rbar-fill" style="width:0%"></div></div><span>0</span></div>
         <div class="rbar"><span>2★</span><div class="rbar-track"><div class="rbar-fill" style="width:0%"></div></div><span>0</span></div>
@@ -1172,40 +1230,10 @@ footer {
       </div>
     </div>
 
-    <div class="reviews-grid">
-      <div class="review-card reveal">
-        <div class="stars"><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span></div>
-        <p class="review-text">10/10 bot perfeito, entregou exatamente o que eu pedi e ainda antes do prazo. Recomendo muito!</p>
-        <div class="reviewer">
-          <img class="reviewer-avatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="fogo33">
-          <div>
-            <div class="reviewer-name">fogo33</div>
-            <div class="reviewer-server">Echo MM</div>
-          </div>
-        </div>
-      </div>
-      <div class="review-card reveal">
-        <div class="stars"><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span></div>
-        <p class="review-text">10/10 — Comprei 2 vezes. Rápido, atencioso e o bot ficou muito melhor do que eu esperava.</p>
-        <div class="reviewer">
-          <img class="reviewer-avatar" src="https://cdn.discordapp.com/embed/avatars/2.png" alt="Ukuna">
-          <div>
-            <div class="reviewer-name">Ukuna</div>
-            <div class="reviewer-server">Sun Store</div>
-          </div>
-        </div>
-      </div>
-      <div class="review-card reveal">
-        <div class="stars"><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span></div>
-        <p class="review-text">10/10 tropa — ele é muito bom no que faz, profissional demais. Recomendo muito pra qualquer servidor.</p>
-        <div class="reviewer">
-          <img class="reviewer-avatar" src="https://cdn.discordapp.com/embed/avatars/4.png" alt="Vittinho">
-          <div>
-            <div class="reviewer-name">Vittinho</div>
-            <div class="reviewer-server">Phantom Store</div>
-          </div>
-        </div>
-      </div>
+    <div class="rv-stage reveal">
+      <div class="rv-progress-wrap"><div class="rv-progress-bar" id="rvBar"></div></div>
+      <div class="rv-card-wrap" id="rvWrap"></div>
+      <div class="rv-dots" id="rvDots"></div>
     </div>
   </div>
 </section>
@@ -1440,6 +1468,114 @@ const nav = document.getElementById('mainNav');
 window.addEventListener('scroll', () => {
   nav.style.boxShadow = window.scrollY > 40 ? '0 4px 30px rgba(0,0,0,0.5)' : '';
 });
+
+/* === Review Slideshow === */
+(function(){
+  const reviews = [
+    {
+      text: "10/10 bot perfeito, entregou exatamente o que eu pedi e ainda antes do prazo. Recomendo muito!",
+      name: "Hg33", srv: "Echo MM",
+      avatar: "https://cdn.discordapp.com/avatars/874768227698376755/5d827d13c498c42d332060299aa259c6.webp?size=160"
+    },
+    {
+      text: "10/10 — Comprei 2 vezes. Rápido, atencioso e o bot ficou muito melhor do que eu esperava.",
+      name: "Hirose", srv: "Sun Store",
+      avatar: "https://cdn.discordapp.com/avatars/1377447122827477192/0e309452b5e70fdec9d453c29e8accf7.webp?size=160"
+    },
+    {
+      text: "10/10 tropa — muito profissional, entregou no prazo e ainda deu suporte depois. Servidor bombando!",
+      name: "Vittinho", srv: "Phantom Store",
+      avatar: "https://cdn.discordapp.com/embed/avatars/4.png"
+    },
+    {
+      text: "Cara MT bom segundo bot meu com ele 10000/10",
+      name: "WzzzX0", srv: "Dono Kazana Store",
+      avatar: "https://cdn.discordapp.com/avatars/1413909670564859965/a3455402d54e71af0790b46ba3b10322.webp?size=160"
+    },
+    {
+      text: "insano dms 10/10.",
+      name: "LAN.SX⁷⁷⁷", srv: "Dono da Robuzy",
+      avatar: "https://cdn.discordapp.com/avatars/416028898845917184/5cc97dfe2352ab84946cc26df20304e6.webp?size=160"
+    },
+    {
+      text: "Muito bom, bot impecavel, perfeito. 10/10",
+      name: "Pkvvop", srv: "Dono NoHeart Hub",
+      avatar: "https://cdn.discordapp.com/avatars/1434494936530550816/a_f4ea714b14c51584724b752fd23e8786.webp?size=160"
+    },
+    {
+      text: "Muito bom 1000/10 os melhores bots vc encontra aqui",
+      name: "Ribas", srv: "Designer Gráfico",
+      avatar: "https://cdn.discordapp.com/avatars/1467129144092397765/2922067aaffc040b31e6ed4724c0c9c0.webp?size=240"
+    },
+    {
+      text: "2 Bot com ele, o melhor nao tem jeito 10/10",
+      name: "Ribas", srv: "Designer Gráfico",
+      avatar: "https://cdn.discordapp.com/avatars/1467129144092397765/2922067aaffc040b31e6ed4724c0c9c0.webp?size=240"
+    },
+  ];
+
+  const wrap = document.getElementById('rvWrap');
+  const dotsEl = document.getElementById('rvDots');
+  const bar = document.getElementById('rvBar');
+  if (!wrap) return;
+
+  const DURATION = 2200;
+  let current = 0, timer;
+
+  reviews.forEach((r, i) => {
+    const c = document.createElement('div');
+    c.className = 'rv-card' + (i === 0 ? ' active' : '');
+    c.innerHTML = `
+      <div class="stars"><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span><span class="star">⭐</span></div>
+      <p class="review-text">${r.text}</p>
+      <div class="reviewer">
+        <img class="reviewer-avatar" src="${r.avatar}" alt="${r.name}">
+        <div><div class="reviewer-name">${r.name}</div><div class="reviewer-server">${r.srv}</div></div>
+      </div>`;
+    wrap.appendChild(c);
+
+    const d = document.createElement('button');
+    d.className = 'rv-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Avaliação ' + (i + 1));
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  const cards = wrap.querySelectorAll('.rv-card');
+  const dots  = dotsEl.querySelectorAll('.rv-dot');
+
+  function startBar() {
+    bar.style.transition = 'none';
+    bar.style.width = '0%';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      bar.style.transition = `width ${DURATION}ms linear`;
+      bar.style.width = '100%';
+    }));
+  }
+
+  function goTo(next) {
+    if (next === current) return;
+    clearTimeout(timer);
+    const prev = current;
+    cards[prev].classList.remove('active');
+    cards[prev].classList.add('leaving');
+    dots[prev].classList.remove('active');
+    setTimeout(() => cards[prev].classList.remove('leaving'), 520);
+    current = next;
+    cards[current].classList.add('active');
+    dots[current].classList.add('active');
+    startBar();
+    schedule();
+  }
+
+  function schedule() {
+    clearTimeout(timer);
+    timer = setTimeout(() => goTo((current + 1) % reviews.length), DURATION);
+  }
+
+  startBar();
+  schedule();
+})();
 </script>
 
 </body>
